@@ -7,41 +7,45 @@ import java.util.*;
 
 @Service
 public class NoteService {
+    private final NoteRepository noteRepository;
     private final Map<Long, Note> notes = new HashMap<>();
     private final Random random = new Random();
     private static final long MAX_ID_VALUE = 999999;
-    public List<Note> listAll(){
-        return new ArrayList<>(notes.values());
+
+    public NoteService(NoteRepository noteRepository) {
+        this.noteRepository = noteRepository;
     }
 
-    public Note add(Note note){
-        note.setId(generateId());
-        notes.put(note.getId(), note);
-        return note;
+
+    public List<Note> listAll() {
+        return noteRepository.findAll();
     }
 
-    void deleteById(long id){
-        if(!notes.containsKey(id)){
+    public Note add(Note note) {
+        return noteRepository.save(note);
+    }
+
+    public void deleteById(long id) {
+        if (!noteRepository.existsById(id)) {
             throw new RuntimeException("note does not exist");
         }
-        notes.remove(id);
+        noteRepository.deleteById(id);
     }
 
 
-    void update(Note note){
-        if(!notes.containsKey(note.getId())){
+    public void update(Note note) {
+        if (!noteRepository.existsById(note.getId())) {
             throw new RuntimeException("note does not exist");
         }
-        Note oldNote = notes.get(note.getId());
-        oldNote.setTitle(note.getTitle());
-        oldNote.setContent(note.getContent());
+        noteRepository.save(note);
     }
 
-    public Note getById(long id){
-        if(!notes.containsKey(id)){
+    public Note getById(long id) {
+        Optional<Note> noteOptional = noteRepository.findById(id);
+        if (!noteOptional.isPresent()) {
             throw new RuntimeException("note does not exist");
         }
-        return notes.get(id);
+        return noteOptional.get();
     }
 
 
