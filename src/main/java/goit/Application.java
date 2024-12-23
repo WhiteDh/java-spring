@@ -24,17 +24,7 @@ public class Application implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		Note note1 = new Note();
-		note1.setTitle("First Note");
-		note1.setContent("This is the first note.");
 
-		Note note2 = new Note();
-		note2.setTitle("Second Note");
-		note2.setContent("This is the second note.");
-
-		// Сохраняем нотатки в БД
-		noteService.add(note1);
-		noteService.add(note2);
 	}
 
 }
